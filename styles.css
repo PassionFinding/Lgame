@@ -6,7 +6,7 @@ td {
     border-color: black;
     width: 100px;
     height: 100px;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
 }
 .red {
     background-color:red;
@@ -22,5 +22,5 @@ td {
 }
 
 #r {
-    background-color: green;
+    background-color: rgb(240, 128, 128);
 }
