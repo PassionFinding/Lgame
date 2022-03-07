@@ -14,72 +14,36 @@ const square13 = document.getElementById('13')
 const square14 = document.getElementById('14')
 const square15 = document.getElementById('15')
 const square16 = document.getElementById('16')
-const table = document.querySelector('table')
+const piece1 = document.getElementById('piece1')
+const piece2 = document.getElementById('piece2')
+const skipbutton = document.getElementById('skip')
 
 const squares = [square1, square2, square3, square4, square5, square6, square7, square8, square9, square10, square11, square12, square13, square14, square15, square16]
-const red_squares = [square2, square3, square7, square11]
-const blue_squares = [square6, square10, square14, square15]
+const pieces = [piece1, piece2]
+let red_squares = [square2, square3, square7, square11]
+let blue_squares = [square6, square10, square14, square15]
 
 //true is blue turn, false is red turn
-let turn = false;
+let turn = true;
 
-// square1.onclick = function() {
-//     if (square1.firstChild) {
-//         square1.style.backgroundColor = 'black';
-//     }
-// }
-
-// square2.onclick = function() {
-//     if (square2.firstChild) {
-//         square2.style.backgroundColor = 'black';
-//     }
-// }
-
-// squares.forEach(function(square) {
-//     const style = getComputedStyle(square)
-//     const color = style.backgroundColor
-//     if (turn === true && !square.firstChild) {
-//         square.addEventListener('click', function(event) {
-//             event.target.style.backgroundColor = 'blue';
-//         })
-//     } else if (turn === false) {
-//         square.addEventListener ('click', function(event) {
-//             event.target.innerHTML = event.target.style.backgroundColor
-//         })
-//     }
-// })
-
-const movement = function(event){
-    if (turn === false) {
-        red_squares.forEach(item => item.style.backgroundColor = 'lightcoral')
-        event.target.style.backgroundColor = 'red'
+const movecalculation = function(){
+    let square_indexes = []
+    if (!turn){
         squares.forEach(function(square){
             const style = getComputedStyle(square)
             const color = style.backgroundColor
-            if ((color === "rgb(255, 255, 255)" || color === "rgb(240, 128, 128)") && !square.firstChild) {
-                square.addEventListener('mouseover', function(event){
-                    event.target.style.backgroundColor = 'red'
-                })
+            if (color === "rgb(255, 0, 0)"){
+                square_indexes.push(squares.indexOf(square))
+            }
+        })
+    } else if (turn){
+        squares.forEach(function(square){
+            const style = getComputedStyle(square)
+            const color = style.backgroundColor
+            if (color === "rgb(0, 0, 255)"){
+                square_indexes.push(squares.indexOf(square))
             }
         })
     }
 }
-
-const unmovement = function(event){
-    if (turn === false) {
-        squares.forEach(function(square){
-            const style = getComputedStyle(square)
-            const color = style.backgroundColor
-            if (color === "rgb(255, 0, 0)") {
-                square.style.backgroundColor = 'white'
-                square.removeEventListener('mouseover', function(event){
-                    event.target.style.backgroundColor = 'red'
-                })
-            }
-        })
-        red_squares.forEach(item => item.style.backgroundColor = 'red')
-    }
-}
-
-table.addEventListener('mousedown', movement)
-table.addEventListener('mouseup', unmovement)
+square2.addEventListener('click', movecalculation)
