@@ -47,19 +47,23 @@ const movecalculation = function(){
     };
     if (square_indexes.length !== 4){return false};
     let longer_line = [];
-    const range = square_indexes[-1] - square_indexes[0];
+    const range = square_indexes[3] - square_indexes[0];
     if (range === 8 || range === 9){
         square_indexes.forEach(function(square){
             const negfour = square - 4;
             const posfour = square + 4;
-            if (negfour in square_indexes || posfour in square_indexes || negfour in longer_line || posfour in longer_line) {
-                longer_line.push(square);
-                square_indexes.splice(square_indexes.indexOf(square), 1);
+            if (square_indexes.includes(negfour) || square_indexes.includes(posfour) || longer_line.includes(negfour) || longer_line.includes(posfour)){
+                longer_line.push(square)
             }
         });
         if (longer_line.length !== 3){return false};
-        const max = Math.max(...longer_line)
-        const min = Math.min(...longer_line)
+        square_indexes.forEach(function(square){
+            if (!longer_line.includes(square)){
+                square_indexes.unshift(square)
+            }
+        })
+        const max = Math.max(...longer_line);
+        const min = Math.min(...longer_line);
         if (square_indexes[0] + 1 === max || square_indexes[0] - 1 === min || square_indexes[0] + 1 === min || square_indexes[0] - 1 === max){
             return true
         } else {
@@ -67,23 +71,119 @@ const movecalculation = function(){
         }
     } else if (range === 4 || range === 6){
         square_indexes.forEach(function(square){
-            const pos = square + 1;
-            const neg = square - 1;
-            if (pos in square_indexes || neg in square_indexes || pos in longer_line || neg in longer_line) {
-                longer_line.push(square);
-                square_indexes.splice(square_indexes.indexOf(square), 1);
-            };
+            const negfour = square - 1;
+            const posfour = square + 1;
+            if (square_indexes.includes(negfour) || square_indexes.includes(posfour) || longer_line.includes(negfour) || longer_line.includes(posfour)){
+                longer_line.push(square)
+            }
         });
         if (longer_line.length !== 3){return false};
-        const max = Math.max(...longer_line)
-        const min = Math.min(...longer_line)
-        if (square_indexes[0] + 1 === max || square_indexes[0] - 1 === min || square_indexes[0] + 1 === min || square_indexes[0] - 1 === max){
+        square_indexes.forEach(function(square){
+            if (!longer_line.includes(square)){
+                square_indexes.unshift(square)
+            }
+        });
+        const max = Math.max(...longer_line);
+        const min = Math.min(...longer_line);
+        if (square_indexes[0] + 4 === max || square_indexes[0] - 4 === min || square_indexes[0] + 4 === min || square_indexes[0] - 4 === max){
             return true
         } else {
             return false
-        }
-    } else {
-        return false;
+        };
     };
 };
 
+const horizontalwincalculation = function(){
+    const starters = [0, 1, 4, 5, 8, 9, 12, 13];
+    let test = [];
+    let possible = 0;
+    let valind = [];
+    if (!turn){
+        squares.forEach(function(square){
+            const style = getComputedStyle(square);
+            const color = style.backgroundColor;
+            if ((color === "rgb(255, 0, 0)" || color === "rgb(255, 255, 255)") && !square.firstChild){
+                valind.push(squares.indexOf(square));
+            };
+        });
+    } else if (turn){
+        squares.forEach(function(square){
+            const style = getComputedStyle(square);
+            const color = style.backgroundColor;
+            if ((color === "rgb(0, 0, 255)" || color === "rgb(255, 255, 255)") && !square.firstChild){
+                valind.push(squares.indexOf(square));
+            };
+        });
+    };
+    starters.forEach(function(val){
+        const plus1 = val + 1;
+        const plus2 = val + 2;
+        if (valind.includes(val) && valind.includes(plus1) && valind.includes(plus2)){
+            test.push(val);
+            test.push(plus1);
+            test.push(plus2);
+            const max = Math.max(...test);
+            const min = Math.min(...test);
+            const minminus = min - 4;
+            const minplus = min + 4;
+            const maxminus = max - 4;
+            const maxplus = max + 4;
+            if (valind.includes(minminus) || valind.includes(minplus) || valind.includes(maxminus) || valind.includes(maxplus)){
+                possible++;
+            } else {
+                test.length = 0;
+                return;
+            }
+        } else {
+            return;
+        }
+    });
+    return possible;
+};
+
+const verticalwincalculation = function(){
+    const starters = [0, 1, 2, 3, 4, 5, 6, 7];
+    let test = [];
+    let possible = 0;
+    let valind = [];
+    if (!turn){
+        squares.forEach(function(square){
+            const style = getComputedStyle(square);
+            const color = style.backgroundColor;
+            if ((color === "rgb(255, 0, 0)" || color === "rgb(255, 255, 255)") && !square.firstChild){
+                valind.push(squares.indexOf(square));
+            };
+        });
+    } else if (turn){
+        squares.forEach(function(square){
+            const style = getComputedStyle(square);
+            const color = style.backgroundColor;
+            if ((color === "rgb(0, 0, 255)" || color === "rgb(255, 255, 255)") && !square.firstChild){
+                valind.push(squares.indexOf(square));
+            };
+        });
+    };
+    starters.forEach(function(num){
+        const plus4 = num + 4;
+        const plus8 = num + 8;
+        if (valind.includes(num) && valind.includes(plus4) && valind.includes(plus8)){
+            test.push(num);
+            test.push(plus4);
+            test.push(plus8);
+            const min = Math.min(...test);
+            const max = Math.max(...test);
+            const minminus = min - 1;
+            const minplus = min + 1;
+            const maxminus = max - 1;
+            const maxplus = max + 1;
+            if (valind.includes(minminus) || valind.includes(minplus) || valind.includes(maxminus) || valind.includes(maxplus)){
+                possible++;
+            } else {
+                return;
+            }
+        } else {
+            return;
+        };
+    });
+    return possible;
+};
