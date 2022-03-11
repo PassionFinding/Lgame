@@ -24,7 +24,7 @@ let red_squares = [square6, square10, square14, square7];
 let blue_squares = [square6, square10, square14, square13];
 
 //true is blue turn, false is red turn
-let turn = false;
+let turn = true;
 
 const movecalculation = function(){
     let square_indexes = [];
@@ -155,21 +155,28 @@ const horizontalwincalculation = function(){
             const minplus = min + 4;
             const maxminus = max - 4;
             const maxplus = max + 4;
-            if ((val === 4 || val === 5 || val === 8 || val === 9) && (valind.includes(minminus) || valind.includes(minplus) || valind.includes(maxminus) || valind.includes(maxplus))){
-                possible++;
-            } else if ((val === 0 || val === 1) && (valind.includes(minplus) || valind.includes(maxplus))){
-                possible++;
-            } else if ((val === 12 || val === 13) && (valind.includes(minminus) || valind.includes(maxminus))){
-                possible++;
-            } else {
-                test.length = 0;
-                return;
-            }
+            const checkers = [minminus, minplus, maxminus, maxplus];
+            checkers.forEach(function(thing){
+                if (thing === minminus || thing === maxminus){
+                    if ((val === 12 || val === 13 || val === 4 || val === 5 || val === 8 || val === 9) && (valind.includes(thing))){
+                        possible++;
+                    } else {
+                        return;
+                    };
+                } else if (thing === minplus || thing === maxplus){
+                    if ((val === 0 || val === 1 || val === 4 || val === 5 || val === 8 || val === 9) && (valind.includes(thing))){
+                        possible++;
+                    } else {
+                        return;
+                    }
+                }
+            });
+            test.length = 0;
         } else {
             return;
         };
     });
-    return valind;
+    return possible;
 };
 
 const verticalwincalculation = function(){
