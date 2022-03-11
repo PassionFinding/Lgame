@@ -20,11 +20,11 @@ const skipbutton = document.getElementById('skip');
 
 const squares = [square1, square2, square3, square4, square5, square6, square7, square8, square9, square10, square11, square12, square13, square14, square15, square16];
 const pieces = [piece1, piece2];
-let red_squares = [square2, square3, square7, square11];
-let blue_squares = [square6, square10, square14, square15];
+let red_squares = [square6, square10, square14, square7];
+let blue_squares = [square6, square10, square14, square13];
 
 //true is blue turn, false is red turn
-let turn = true;
+let turn = false;
 
 const movecalculation = function(){
     let square_indexes = [];
@@ -36,6 +36,19 @@ const movecalculation = function(){
                 square_indexes.push(squares.indexOf(square));
             };
         });
+        let test = [];
+        square_indexes.forEach(function(index){
+            test.push(squares[index])
+        });
+        let counter = 0;
+        test.forEach(function(square){
+            if (red_squares.includes(square)){
+                counter++;
+            }
+        });
+        if (counter === 4){
+            return false;
+        }
     } else if (turn){
         squares.forEach(function(square){
             const style = getComputedStyle(square);
@@ -44,6 +57,19 @@ const movecalculation = function(){
                 square_indexes.push(squares.indexOf(square));
             };
         });
+        let test = [];
+        square_indexes.forEach(function(index){
+            test.push(squares[index]);
+        });
+        let counter = 0;
+        test.forEach(function(square){
+            if (blue_squares.includes(square)){
+                counter++;
+            }
+        })
+        if (counter === 4){
+            return false
+        }
     };
     if (square_indexes.length !== 4){return false};
     let longer_line = [];
