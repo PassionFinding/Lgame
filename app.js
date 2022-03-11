@@ -24,7 +24,7 @@ let red_squares = [square2, square3, square7, square11];
 let blue_squares = [square6, square10, square14, square15];
 
 //true is blue turn, false is red turn
-let turn = false;
+let turn = true;
 
 const movecalculation = function(){
     let square_indexes = [];
@@ -91,6 +91,7 @@ const movecalculation = function(){
             return false
         };
     };
+    return false;
 };
 
 const horizontalwincalculation = function(){
