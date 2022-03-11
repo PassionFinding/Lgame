@@ -24,7 +24,7 @@ let red_squares = [square2, square3, square7, square11];
 let blue_squares = [square6, square10, square14, square15];
 
 //true is blue turn, false is red turn
-let turn = true;
+let turn = false;
 
 const movecalculation = function(){
     let square_indexes = [];
@@ -128,7 +128,11 @@ const horizontalwincalculation = function(){
             const minplus = min + 4;
             const maxminus = max - 4;
             const maxplus = max + 4;
-            if (valind.includes(minminus) || valind.includes(minplus) || valind.includes(maxminus) || valind.includes(maxplus)){
+            if ((val === 4 || val === 5 || val === 8 || val === 9) && (valind.includes(minminus) || valind.includes(minplus) || valind.includes(maxminus) || valind.includes(maxplus))){
+                possible++;
+            } else if ((val === 0 || val === 1) && (valind.includes(minplus) || valind.includes(maxplus))){
+                possible++;
+            } else if ((val === 12 || val === 13) && (valind.includes(minminus) || valind.includes(maxminus))){
                 possible++;
             } else {
                 test.length = 0;
@@ -136,9 +140,9 @@ const horizontalwincalculation = function(){
             }
         } else {
             return;
-        }
+        };
     });
-    return possible;
+    return valind;
 };
 
 const verticalwincalculation = function(){
@@ -176,9 +180,14 @@ const verticalwincalculation = function(){
             const minplus = min + 1;
             const maxminus = max - 1;
             const maxplus = max + 1;
-            if (valind.includes(minminus) || valind.includes(minplus) || valind.includes(maxminus) || valind.includes(maxplus)){
+            if ((num === 0 || num === 4) && (valind.includes(minplus) || valind.includes(maxplus))){
+                possible++;
+            } else if ((num === 3 || num === 7) && (valind.includes(minminus) || valind.includes(maxminus))) {
+                possible++;
+            } else if ((num === 1 || num === 2 || num === 5 || num === 6) && (valind.includes(minplus) || valind.includes(minminus) || valind.includes(maxplus) || valind.includes(maxminus))) {
                 possible++;
             } else {
+                test.length = 0;
                 return;
             }
         } else {
