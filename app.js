@@ -17,14 +17,15 @@ const square16 = document.getElementById('16');
 const piece1 = document.getElementById('piece1');
 const piece2 = document.getElementById('piece2');
 const skipbutton = document.getElementById('skip');
+const table = document.querySelector('table');
 
 const squares = [square1, square2, square3, square4, square5, square6, square7, square8, square9, square10, square11, square12, square13, square14, square15, square16];
 const pieces = [piece1, piece2];
-let red_squares = [square6, square10, square14, square7];
-let blue_squares = [square6, square10, square14, square13];
+let red_squares = [square2, square3, square7, square11];
+let blue_squares = [square6, square10, square14, square15];
 
 //true is blue turn, false is red turn
-let turn = true;
+let turn = false;
 
 const movecalculation = function(){
     let square_indexes = [];
@@ -230,3 +231,34 @@ const verticalwincalculation = function(){
     });
     return possible;
 };
+
+const down = function(event){
+    const style = getComputedStyle(event.target)
+    const color = style.backgroundColor
+    if (turn === true && !event.target.firstChild && (color === "rgb(255, 255, 255)" || color === "rgb(0, 0, 255)")) {
+        blue_squares.forEach(item => item.style.backgroundColor = "rgb(117, 192, 218)");
+        event.target.style.backgroundColor = "blue";
+        squares.forEach(function(square){
+            const style = getComputedStyle(square)
+            const color = style.backgroundColor
+            if ((color === "rgb(255, 255, 255)" || color === "rgb(117, 192, 218)") && !square.firstChild){
+                square.addEventListener('mouseover', function(event){
+                    event.target.style.backgroundColor = "blue"
+                })
+            }
+        })
+    } else if (turn === false && !event.target.firstChild && (color === "rgb(255, 255, 255)" || color === "rgb(255, 0, 0)")){
+        red_squares.forEach(item => item.style.backgroundColor = "lightcoral")
+        event.target.style.backgroundColor = "red";
+        squares.forEach(function(square){
+            const style = getComputedStyle(square)
+            const color = style.backgroundColor
+            if ((color === "rgb(255, 255, 255)" || color === "rgb(240, 128, 128)") && !square.firstChild){
+                square.addEventListener('mouseover', function(event){
+                    event.target.style.backgroundColor = "red"
+                })
+            }
+        })
+    }
+}
+
