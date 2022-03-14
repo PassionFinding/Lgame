@@ -215,16 +215,23 @@ const verticalwincalculation = function(){
             const minplus = min + 1;
             const maxminus = max - 1;
             const maxplus = max + 1;
-            if ((num === 0 || num === 4) && (valind.includes(minplus) || valind.includes(maxplus))){
-                possible++;
-            } else if ((num === 3 || num === 7) && (valind.includes(minminus) || valind.includes(maxminus))) {
-                possible++;
-            } else if ((num === 1 || num === 2 || num === 5 || num === 6) && (valind.includes(minplus) || valind.includes(minminus) || valind.includes(maxplus) || valind.includes(maxminus))) {
-                possible++;
-            } else {
-                test.length = 0;
-                return;
-            }
+            const checkers = [minminus, minplus, maxminus, maxplus];
+            checkers.forEach(function(thing){
+                if (thing === minminus || thing === maxminus){
+                    if ((num === 3 || num === 7 || num === 1 || num === 2 || num === 5 || num === 6) && (valind.includes(thing))){
+                        possible++;
+                    } else {
+                        return;
+                    };
+                } else if (thing === minplus || thing === maxplus){
+                    if ((num === 0 || num === 4 || num === 1 || num === 2 || num === 5 || num === 6) && (valind.includes(thing))){
+                        possible++;
+                    } else {
+                        return;
+                    }
+                }
+            });
+            test.length = 0;
         } else {
             return;
         };
@@ -232,6 +239,7 @@ const verticalwincalculation = function(){
     return possible;
 };
 
+<<<<<<< HEAD
 const down = function(event){
     const style = getComputedStyle(event.target)
     const color = style.backgroundColor
@@ -262,3 +270,10 @@ const down = function(event){
     }
 }
 
+=======
+const wincalculation = function(){
+    final = (horizontalwincalculation() + verticalwincalculation())
+    final--;
+    return final;
+};
+>>>>>>> 75c24b41f5ad3d3527a3c2ad1976f8e4b7bd5595
