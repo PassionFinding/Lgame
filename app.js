@@ -239,7 +239,6 @@ const verticalwincalculation = function(){
     return possible;
 };
 
-<<<<<<< HEAD
 const down = function(event){
     const style = getComputedStyle(event.target)
     const color = style.backgroundColor
@@ -270,10 +269,3 @@ const down = function(event){
     }
 }
 
-=======
-const wincalculation = function(){
-    final = (horizontalwincalculation() + verticalwincalculation())
-    final--;
-    return final;
-};
->>>>>>> 75c24b41f5ad3d3527a3c2ad1976f8e4b7bd5595
