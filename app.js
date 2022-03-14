@@ -269,3 +269,8 @@ const down = function(event){
     }
 }
 
+const wincalculation = function(){
+    const final = (horizontalwincalculation() + verticalwincalculation())
+    final--;
+    return final
+}
