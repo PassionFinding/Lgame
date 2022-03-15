@@ -249,9 +249,7 @@ const down = function(event){
             const style = getComputedStyle(square)
             const color = style.backgroundColor
             if ((color === "rgb(255, 255, 255)" || color === "rgb(117, 192, 218)") && !square.firstChild){
-                square.addEventListener('mouseover', function(event){
-                    event.target.style.backgroundColor = "blue"
-                })
+                square.addEventListener('mouseover', turncolor(event))
             }
         })
     } else if (turn === false && !event.target.firstChild && (color === "rgb(255, 255, 255)" || color === "rgb(255, 0, 0)")){
@@ -261,11 +259,17 @@ const down = function(event){
             const style = getComputedStyle(square)
             const color = style.backgroundColor
             if ((color === "rgb(255, 255, 255)" || color === "rgb(240, 128, 128)") && !square.firstChild){
-                square.addEventListener('mouseover', function(event){
-                    event.target.style.backgroundColor = "red"
-                })
+                square.addEventListener('mouseover', turncolor(event))
             }
         })
+    }
+}
+
+const turncolor = function(event){
+    if (turn){
+        event.target.style.backgroundColor = "blue"
+    } else {
+        event.target.style.backgroundColor = "red"
     }
 }
 
@@ -273,4 +277,45 @@ const wincalculation = function(){
     let final = (horizontalwincalculation() + verticalwincalculation())
     final--;
     return final
+}
+
+const up = function(){
+    if (!movecalculation()){
+        squares.forEach(function(square){
+            square.removeEventListener('mouseover', turncolor)
+            const style = getComputedStyle(square)
+            const color = style.backgroundColor
+            if (turn){
+                if (color === "rgb(0, 0, 255)"){
+                    square.style.backgroundColor = "white"
+                }
+            } else {
+                if (color === "rgb(255, 0, 0)"){
+                    square.style.backgroundColor = "white"
+                }
+            }
+        })
+    } else if (movecalculation()){
+        if (turn){
+            blue_squares.length = 0
+            squares.forEach(function(square){
+                square.removeEventListener('mouseover', turncolor)
+                const style = getComputedStyle(square)
+                const color = style.backgroundColor
+                if (color === "rgb(0, 0, 255)"){
+                    blue_squares.push(square)
+                }
+            })
+        } else {
+            red_squares.length = 0
+            squares.forEach(function(square){
+                square.removeEventListener('mouseover', turncolor)
+                const style = getComputedStyle(square)
+                const color = style.backgroundColor
+                if (color === "rgb(255, 0, 0)"){
+                    red_squares.push(square)
+                }
+            })
+        }
+    }
 }
