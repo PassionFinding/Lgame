@@ -21,11 +21,21 @@ const table = document.querySelector('table');
 
 const squares = [square1, square2, square3, square4, square5, square6, square7, square8, square9, square10, square11, square12, square13, square14, square15, square16];
 const pieces = [piece1, piece2];
+let piece = piece1
 let red_squares = [square2, square3, square7, square11];
 let blue_squares = [square6, square10, square14, square15];
 
 //true is blue turn, false is red turn
 let turn = false;
+let click = false;
+
+const callmeblue = function(parameter){
+    parameter.target.style.backgroundColor = "blue"
+}
+
+const callmered = function(parameter){
+    parameter.target.style.backgroundColor = "red"
+}
 
 const movecalculation = function(){
     let square_indexes = [];
@@ -239,83 +249,136 @@ const verticalwincalculation = function(){
     return possible;
 };
 
-const down = function(event){
-    const style = getComputedStyle(event.target)
-    const color = style.backgroundColor
-    if (turn === true && !event.target.firstChild && (color === "rgb(255, 255, 255)" || color === "rgb(0, 0, 255)")) {
-        blue_squares.forEach(item => item.style.backgroundColor = "rgb(117, 192, 218)");
-        event.target.style.backgroundColor = "blue";
-        squares.forEach(function(square){
-            const style = getComputedStyle(square)
-            const color = style.backgroundColor
-            if ((color === "rgb(255, 255, 255)" || color === "rgb(117, 192, 218)") && !square.firstChild){
-                square.addEventListener('mouseover', turncolor(event))
-            }
-        })
-    } else if (turn === false && !event.target.firstChild && (color === "rgb(255, 255, 255)" || color === "rgb(255, 0, 0)")){
-        red_squares.forEach(item => item.style.backgroundColor = "lightcoral")
-        event.target.style.backgroundColor = "red";
-        squares.forEach(function(square){
-            const style = getComputedStyle(square)
-            const color = style.backgroundColor
-            if ((color === "rgb(255, 255, 255)" || color === "rgb(240, 128, 128)") && !square.firstChild){
-                square.addEventListener('mouseover', turncolor(event))
-            }
-        })
-    }
-}
-
-const turncolor = function(event){
-    if (turn){
-        event.target.style.backgroundColor = "blue"
-    } else {
-        event.target.style.backgroundColor = "red"
-    }
-}
-
 const wincalculation = function(){
     let final = (horizontalwincalculation() + verticalwincalculation())
     final--;
     return final
 }
 
-const up = function(){
-    if (!movecalculation()){
-        squares.forEach(function(square){
-            square.removeEventListener('mouseover', turncolor)
-            const style = getComputedStyle(square)
-            const color = style.backgroundColor
-            if (turn){
-                if (color === "rgb(0, 0, 255)"){
-                    square.style.backgroundColor = "white"
-                }
-            } else {
-                if (color === "rgb(255, 0, 0)"){
-                    square.style.backgroundColor = "white"
-                }
-            }
-        })
-    } else if (movecalculation()){
-        if (turn){
-            blue_squares.length = 0
+const clicked = function(event){
+    if (!click){
+        click = true
+        const style = getComputedStyle(event.target)
+        const color = style.backgroundColor
+        if (turn && !event.target.firstChild && (color === "rgb(255, 255, 255)" || color === "rgb(0, 0, 255)")) {
+            blue_squares.forEach(item => item.style.backgroundColor = "rgb(117, 192, 218)");
+            event.target.style.backgroundColor = "blue";
             squares.forEach(function(square){
-                square.removeEventListener('mouseover', turncolor)
                 const style = getComputedStyle(square)
                 const color = style.backgroundColor
-                if (color === "rgb(0, 0, 255)"){
-                    blue_squares.push(square)
+                if ((color === "rgb(255, 255, 255)" || color === "rgb(117, 192, 218)") && !square.firstChild){
+                    square.addEventListener('mouseover', callmeblue)
                 }
             })
-        } else {
-            red_squares.length = 0
+        } else if (!turn && !event.target.firstChild && (color === "rgb(255, 255, 255)" || color === "rgb(255, 0, 0)")){
+            red_squares.forEach(item => item.style.backgroundColor = "lightcoral")
+            event.target.style.backgroundColor = "red";
             squares.forEach(function(square){
-                square.removeEventListener('mouseover', turncolor)
                 const style = getComputedStyle(square)
                 const color = style.backgroundColor
-                if (color === "rgb(255, 0, 0)"){
-                    red_squares.push(square)
+                if ((color === "rgb(255, 255, 255)" || color === "rgb(240, 128, 128)") && !square.firstChild){
+                    square.addEventListener('mouseover', callmered);
                 }
             })
         }
+    } else {
+        click = false
+        if (!movecalculation()){
+            squares.forEach(function(square){
+                square.removeEventListener('mouseover', callmered)
+                square.removeEventListener('mouseover', callmeblue)
+                const style = getComputedStyle(square)
+                const color = style.backgroundColor
+                if ((color === "rgb(255, 0, 0)" && !red_squares.includes(square)) || (color === "rgb(0, 0, 255)" && !blue_squares.includes(square))){
+                    square.style.backgroundColor = "white"
+                } else if (red_squares.includes(square)){
+                    square.style.backgroundColor = "red"
+                } else if (blue_squares.includes(square)){
+                    square.style.backgroundColor = "blue"
+                }
+            })
+        } else {
+            if (turn){
+                turn = false
+                blue_squares.length = 0
+                squares.forEach(function(square){
+                    square.removeEventListener('mouseover', callmeblue)
+                    const style = getComputedStyle(square)
+                    const color = style.backgroundColor
+                    if (color === "rgb(0, 0, 255)"){
+                        blue_squares.push(square)
+                    } else if (color === "rgb(117, 192, 218)"){
+                        square.style.backgroundColor = "white"
+                    }
+                })
+            } else {
+                turn = true
+                red_squares.length = 0
+                squares.forEach(function(square){
+                    square.removeEventListener('mouseover', callmered)
+                    const style = getComputedStyle(square)
+                    const color = style.backgroundColor
+                    if (color === "rgb(255, 0, 0)"){
+                        red_squares.push(square)
+                    } else if (color === "rgb(240, 128, 128)"){
+                        square.style.backgroundColor = "white"
+                    }
+                })
+            }
+            if (wincalculation() > 0){
+                table.removeEventListener('click', clicked)
+                piece1.addEventListener('click', blackpiececlick)
+                piece2.addEventListener('click', blackpiececlick)
+                skipbutton.addEventListener('click', continuegame)
+            } else {
+                table.removeEventListener('click', clicked)
+            }
+        }
     }
 }
+
+const continuegame = function(){
+    table.addEventListener('click', clicked)
+    piece1.removeEventListener('click', blackpiececlick)
+    piece2.removeEventListener('click', blackpiececlick)
+    squares.forEach(function(square){
+        square.removeEventListener('click', squareclick)
+    })
+    pieces.forEach(function(piece){
+        piece.style.backgroundColor = "black"
+    })
+}
+
+const squareclick = function(event){
+    pieces.forEach(function(piece){
+        piece.removeEventListener('click', blackpiececlick)
+    })
+    piece.style.backgroundColor = 'black'
+    squares.forEach(function(square){
+        square.removeEventListener('click', squareclick)
+    })
+    piece.parentNode.removeChild(piece)
+    event.target.appendChild(piece)
+    if (wincalculation() > 0){
+        continuegame()
+    }
+}
+
+const blackpiececlick = function(event){
+    piece = event.target
+    event.target.style.backgroundColor = "gray"
+    pieces.forEach(function(test){
+        if (test !== piece){
+            test.style.backgroundColor = "black"
+        }
+    })
+    squares.forEach(function(square){
+        const style = getComputedStyle(square)
+        const color = style.backgroundColor
+        if (color === "rgb(255, 255, 255)" && !square.firstChild){
+            square.addEventListener('click', squareclick)
+        }
+    })
+}
+
+table.addEventListener('click', clicked)
