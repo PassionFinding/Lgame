@@ -425,6 +425,7 @@ const squareclick = function(event){
     if (wincalculation() > 0){
         continuegame()
     } else {
+        turn = !turn
         table.removeEventListener('click', clicked)
         squares.forEach(function(square){
             square.style.cursor = 'default'
